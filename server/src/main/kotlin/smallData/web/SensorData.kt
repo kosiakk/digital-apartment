@@ -2,7 +2,6 @@ package smallData.web
 
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.context.WebApplicationContext
@@ -10,6 +9,7 @@ import java.io.Reader
 import java.time.LocalDateTime
 import java.util.*
 import javax.annotation.PostConstruct
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by P on 17.09.2016.
@@ -18,11 +18,7 @@ import javax.annotation.PostConstruct
 @RequestMapping("/sensor")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
-    var warningLevel: WaringLevel
-        get() = warningLevel
-        private set(value) {
-            warningLevel = value
-        }
+    var warningLevel: WaringLevel = WaringLevel.GREEN
 
     enum class WaringLevel {
         GREEN, YELLOW, RED
@@ -109,22 +105,16 @@ open class SensorManager {
     }
 
     @PostMapping("toggle")
-    fun toggle(body: Reader) {
-
+    fun toggle(body: Reader, response: HttpServletResponse) {
         val location = body.readText()
-
         val sensor = sensordata.find { it.location == location } ?: return
 
         val current = sensor.dataHistory.last().value
-
         sensor.dataHistory.add(SensorData(!current, LocalDateTime.now()))
 
         computeWarningLevel()
-    }
 
-    @GetMapping("closedoor")
-    fun closeDoor() {
-        sensordataMap[SensorType.DOOR]?.filter { it.location == "Front door" }?.forEach { d -> d.dataHistory.add(SensorData(false, LocalDateTime.now())) }
+        response.status = HttpServletResponse.SC_CREATED
     }
 
 }

@@ -26,6 +26,14 @@
     display: inherit;
 }
 
-.app--layout-background {
-    background: url('/img/Lines-Green-Yellow-Rectangle-Abstract-Pattern.jpg') center / cover;
+.app--background-green {
+    background: url('/img/green.jpg') center / cover;
+}
+
+.app--background-red {
+    background: url('/img/alarm.jpg') center / cover;
+}
+
+.app--background-yellow {
+    background: url('/img/warning.jpg') center / cover;
 }
