@@ -19,11 +19,8 @@ import javax.servlet.http.HttpServletResponse
 @RequestMapping("/sensor")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
-    var warningLevel: WaringLevel
-        get() = warningLevel
-        private set(value) {
-            warningLevel = value
-        }
+    var warningLevel: WaringLevel = WaringLevel.GREEN
+
 
     enum class WaringLevel {
         GREEN, YELLOW, RED
@@ -84,23 +81,21 @@ open class SensorManager {
         //magic heuristics
         val initialWarningLevel = warningLevel
 
-        val doorclosed = sensordataMap[SensorType.DOOR]?.filter { it.isOn() }?.any() ?: false
         val window = sensordataMap[SensorType.WINDOW]?.filter { it.isOn() }?.firstOrNull() ?: null
         if(window == null) return;
+        val doorclosed = sensordataMap[SensorType.DOOR]?.filter { it.isOn() }?.any() ?: false
         val hasNoMovement = sensordataMap[SensorType.DOOR]?.filterNot { it.isOn() }?.any() ?: false
 
-        warningLevel = WarningLevel.GREEN
+        warningLevel = WaringLevel.GREEN
         if (window.isOn() && hasNoMovement) {
-            warningLevel = WarningLevel.YELLOW
+            warningLevel = WaringLevel.YELLOW
             if (doorclosed) {
-                warningLevel = WarningLevel.RED
+                warningLevel = WaringLevel.RED
                 if(warningLevel != initialWarningLevel){
                     CallHelper.callPhoneAlarm("Hi Mrs Theresa you left the ${window.location} window open")
                 }
             }
         }
-
-
     }
 
 
@@ -122,8 +117,6 @@ open class SensorManager {
         sensor.dataHistory.add(SensorData(!current, LocalDateTime.now()))
 
         computeWarningLevel()
-    }
-
         response.status = HttpServletResponse.SC_CREATED
     }
 
