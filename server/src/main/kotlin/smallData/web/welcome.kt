@@ -9,6 +9,7 @@ import smallData.view.materialPage
 import smallData.view.mdl_color
 import smallData.view.mdl_icon
 import java.io.PrintWriter
+import java.util.*
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -38,6 +39,8 @@ class Welcome {
 
                 header("mdl-layout__header  mdl-layout__header--waterfall") {
                     mdl_color("light-green", "grey-800")
+
+                    classes += "mdl-layout__header--transparent  app--layout-background"
 
                     // Top row, always visible
                     div("mdl-layout__header-row") {
@@ -81,14 +84,32 @@ class Welcome {
 
                     div("page-content") {
 
-                        h2 { +"Details:" }
-
-                        mdl_icon("face")
+                        h4 { +"Details:" }
 
 
-                        ul {
-                            for (i in 0..50) {
-                                li { +"item $i" }
+                        +Date().toString()
+
+
+                        ul("mdl-list") {
+                            for (i in 0..20) {
+                                li("mdl-list__item  mdl-list__item--two-line") {
+                                    span("mdl-list__item-primary-content") {
+                                        span {
+                                            +"Window"
+                                        }
+                                        span("mdl-list__item-sub-title") {
+                                            +"Bedroom"
+                                        }
+                                    }
+                                    span("mdl-list__item-secondary-content") {
+                                        span("mdl-list__item-secondary-info") { +"closed" }
+                                        span("mdl-list__item-secondary-action") {
+                                            mdl_icon("lock"){
+                                                mdl_color("white", "green")
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
                         }
