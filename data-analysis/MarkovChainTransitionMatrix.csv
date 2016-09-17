@@ -1,4 +1,4 @@
-From;To;Probability;SE
+Source;Target;Weight;SE
 BalcDoor;BalcDoor;0.3117284;0.021933133
 Bedroom;BalcDoor;0.02699896;0.003744082
 BedroomWin;BalcDoor;0.04659091;0.007276278

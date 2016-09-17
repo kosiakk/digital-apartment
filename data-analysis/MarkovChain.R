@@ -53,5 +53,7 @@ out <- out[with(out, order(ts)), ]
 mc.fit <- markovchainFit(data = out$status, method="mle", name="Event Sensor MLE")
 
 summary(mc.fit)
-plot(mc.fit$estimate)
+plot(mc.fit$estimate, vertex.color="white", edge.arrow.size=0.3)
+
 rmarkovchain(n=1000, object=mc.fit$estimate, t0 = "FlatDoor") # show standard path...
+
