@@ -12,8 +12,10 @@
 hs_err_pid*
 
 server/gradle/wrapper/gradle-wrapper.properties
+server/gradlew
 server/gradlew.*
 server/.idea
 server/.gradle
 
-
+server/build
+server/classes
