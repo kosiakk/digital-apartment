@@ -10,7 +10,9 @@ import smallData.view.mdl_icon
  */
 
 fun SPAN.sensorIcon(sensor: SensorManager.Sensor) {
-    val onOff = sensor.dataHistory.last().value
+    val lastOrNull = sensor.dataHistory.lastOrNull()
+
+    val onOff = lastOrNull?.value ?: false
 
     val icon = if (onOff) {
         sensor.type.stateOnIcon

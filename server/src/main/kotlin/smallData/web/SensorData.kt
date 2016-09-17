@@ -2,7 +2,6 @@ package smallData.web
 
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.context.WebApplicationContext
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
     var warningLevel: WaringLevel = WaringLevel.GREEN
-
 
     enum class WaringLevel {
         GREEN, YELLOW, RED
@@ -80,21 +78,26 @@ open class SensorManager {
         //magic heuristics
         val initialWarningLevel = warningLevel
 
-        val window = sensordataMap[SensorType.WINDOW]?.filter { it.isOn() }?.firstOrNull() ?: null
-        if(window == null) return;
-        val doorclosed = sensordataMap[SensorType.DOOR]?.filter { it.isOn() }?.any() ?: false
-        val hasNoMovement = sensordataMap[SensorType.DOOR]?.filterNot { it.isOn() }?.any() ?: false
-
         warningLevel = WaringLevel.GREEN
-        if (window.isOn() && hasNoMovement) {
+
+        val window = sensordataMap[SensorType.WINDOW]?.find { it.isOn() } ?: return
+
+        val hasMovement = sensordataMap[SensorType.MOVEMENT]?.any { it.isOn() } ?: false
+        val doorClosed = !frontDoor.isOn()
+
+        if (window.isOn() && !hasMovement) {
             warningLevel = WaringLevel.YELLOW
-            if (doorclosed) {
+
+            if (doorClosed) {
                 warningLevel = WaringLevel.RED
-                if(warningLevel != initialWarningLevel){
-                    CallHelper.callPhoneAlarm("Hi Mrs Theresa you left the ${window.location} window open")
+
+                if (warningLevel != initialWarningLevel) {
+                    CallHelper.callPhoneAlarm("Hi Mrs Theresa you left the ${window.location} open")
                 }
             }
         }
+
+
     }
 
 
@@ -108,14 +111,13 @@ open class SensorManager {
     @PostMapping("toggle")
     fun toggle(body: Reader, response: HttpServletResponse) {
         val location = body.readText()
-
         val sensor = sensordata.find { it.location == location } ?: return
 
         val current = sensor.dataHistory.last().value
-
         sensor.dataHistory.add(SensorData(!current, LocalDateTime.now()))
 
         computeWarningLevel()
+
         response.status = HttpServletResponse.SC_CREATED
     }
 
