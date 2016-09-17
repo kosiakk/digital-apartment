@@ -16,6 +16,12 @@ import javax.annotation.PostConstruct
 @RequestMapping("/sensor")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
+    private var _warningLevel : Int = 0;
+    var warningLevel : Int
+        get() = _warningLevel
+        private set(value) {
+            _warningLevel = value
+        }
 
     enum class SensorType(val description: String, val stateOnIcon: String, val stateOffIcon: String, stateOnColor: String, stateOffColor: String) {
         BRIGHTNESS("brightness", "lightbulb", "lightbulb", "yellow", "black"),
@@ -66,6 +72,12 @@ open class SensorManager {
         sensordataMap.put(SensorType.WINDOW, mutableListOf(livingroomWindow, balconyWindow))
 
         sensordataMap.values.forEach { sensordata.addAll(it) }
+
+        for (i in 0..nValues) {
+            for ( s in sensordata){
+                s.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
+            }
+        }
     }
 
     @PostMapping("/register")
