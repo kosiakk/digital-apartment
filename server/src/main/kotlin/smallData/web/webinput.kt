@@ -1,18 +1,20 @@
 package smallData.web
 
-import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.result.getAs
+import kotlinx.html.div
+import kotlinx.html.header
+import kotlinx.html.img
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import java.io.File
+import smallData.spring.flush
+import smallData.view.materialPage
+import smallData.view.mdl_color
 import java.io.IOException
 import java.io.PrintWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
@@ -26,9 +28,29 @@ open class WebInput() {
     val officephone3131 = "+41444453131"
 
     @GetMapping("alarm")
-    fun soundAlarm(result: PrintWriter, message : String) {
+    fun soundAlarm(result: PrintWriter, message: String) {
         result.print("ringing alarm....")
         callPhoneAlarm(message)
+    }
+
+    @GetMapping
+    fun showRoom(result: PrintWriter) {
+        val title = "Apt. 1090"
+        result.materialPage(title) {
+            div("mdl_layout") {
+                classes += "mdl-js-layout"
+                classes += "mdl-layout--fixed-header"
+
+                header("mdl-layout__header  mdl-layout__header--waterfall") {
+                    mdl_color("light-green", "grey-800")
+                    classes += "mdl-layout__header--transparent  app--layout-background"
+                }
+                flush()
+
+                img("room","http://www.rukle.com/5/g/a/architecture-floor-plans-furniture-in-room-ideas-for-small-spaces-layout-planner-plans-draw-house-home-floor-plan-how-to-event-management-system-building-design-architecture-planning-drawing-blueprint-my-space-gre-furnit_1186x837.jpg")
+            }
+        }
+
     }
 
     fun <T> sendGET(url: URL, clazz: Class<T>): T {
@@ -44,11 +66,11 @@ open class WebInput() {
 
     }
 
-    fun callPhoneAlarm(message: String, phonenumber : String = officephone3131){
-        try{
+    fun callPhoneAlarm(message: String, phonenumber: String = officephone3131) {
+        try {
 //            val url = URL(alarmURL+"&phonenumber=$phonenumber&msg=$message")
-            val tokenFile : URL = javaClass.classLoader.getResource("token")
-            val token : String= String(Files.readAllBytes(Paths.get(tokenFile.toURI())))
+            val tokenFile: URL = javaClass.classLoader.getResource("token")
+            val token: String = String(Files.readAllBytes(Paths.get(tokenFile.toURI())))
 
             val url = "$alarmURL&token=$token&phonenumber=$phonenumber&msg=$message"
 
@@ -56,9 +78,10 @@ open class WebInput() {
                 //do something with response
                 when (result) {
                     else -> println("no result")
+
                 }
             }
-        } catch (e : IOException){
+        } catch (e: IOException) {
             e.printStackTrace()
         }
 
