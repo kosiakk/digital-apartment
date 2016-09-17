@@ -24,13 +24,10 @@ import java.nio.file.Paths
 @RequestMapping("/input")
 open class WebInput() {
 
-    val alarmURL = "https://api.tropo.com/1.0/sessions?action=create"
-    val officephone3131 = "+41444453131"
-
     @GetMapping("alarm")
     fun soundAlarm(result: PrintWriter, message: String) {
         result.print("ringing alarm....")
-        callPhoneAlarm(message)
+        CallHelper.callPhoneAlarm(message)
     }
 
     @GetMapping
@@ -47,11 +44,20 @@ open class WebInput() {
                 }
                 flush()
 
-                img("room","http://www.rukle.com/5/g/a/architecture-floor-plans-furniture-in-room-ideas-for-small-spaces-layout-planner-plans-draw-house-home-floor-plan-how-to-event-management-system-building-design-architecture-planning-drawing-blueprint-my-space-gre-furnit_1186x837.jpg")
+                img("room", "http://www.rukle.com/5/g/a/architecture-floor-plans-furniture-in-room-ideas-for-small-spaces-layout-planner-plans-draw-house-home-floor-plan-how-to-event-management-system-building-design-architecture-planning-drawing-blueprint-my-space-gre-furnit_1186x837.jpg")
             }
         }
 
     }
+
+}
+
+object CallHelper{
+
+    private val alarmURL = "https://api.tropo.com/1.0/sessions?action=create"
+    private val officephone3131 = "+41444453130"
+    private val tokenFile: URL = javaClass.classLoader.getResource("token")
+    private val token: String = String(Files.readAllBytes(Paths.get(tokenFile.toURI())))
 
     fun <T> sendGET(url: URL, clazz: Class<T>): T {
         throw AssertionError("not implemented");
@@ -63,17 +69,11 @@ open class WebInput() {
         conn.connect()
         val res = conn.inputStream
         res.close()
-
     }
 
     fun callPhoneAlarm(message: String, phonenumber: String = officephone3131) {
         try {
-//            val url = URL(alarmURL+"&phonenumber=$phonenumber&msg=$message")
-            val tokenFile: URL = javaClass.classLoader.getResource("token")
-            val token: String = String(Files.readAllBytes(Paths.get(tokenFile.toURI())))
-
             val url = "$alarmURL&token=$token&phonenumber=$phonenumber&msg=$message"
-
             url.httpGet().responseString { request, response, result ->
                 //do something with response
                 when (result) {

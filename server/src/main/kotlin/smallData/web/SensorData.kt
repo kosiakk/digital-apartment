@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.context.WebApplicationContext
 import java.io.Reader
+import java.net.URL
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.util.*
 import javax.annotation.PostConstruct
@@ -18,13 +21,8 @@ import javax.annotation.PostConstruct
 @RequestMapping("/sensor")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
-    var warningLevel: WaringLevel
-        get() = warningLevel
-        private set(value) {
-            warningLevel = value
-        }
-
-    enum class WaringLevel {
+    var warningLevel: WarningLevel = WarningLevel.GREEN
+    enum class WarningLevel {
         GREEN, YELLOW, RED
     }
 
@@ -45,7 +43,6 @@ open class SensorManager {
     val balconyDoor = Sensor("Balcony door", SensorType.DOOR)
     val balconyWindow = Sensor("Balcony window", SensorType.WINDOW)
 
-
     data class Sensor(val location: String, val type: SensorType, val dataHistory: MutableList<SensorData> = mutableListOf()) {
         fun isOn() = dataHistory.isNotEmpty() && dataHistory.last().value == true
     }
@@ -60,12 +57,8 @@ open class SensorManager {
     @PostConstruct
     fun initializeWithDummyData() {
         //dummy data helpers
-
-
         val rng = Random(1337)
-
         val nValues = 20
-
         sensordataMap.put(SensorType.MOVEMENT, mutableListOf(livingroomMovement, kitchenMovement, bedroomMovement))
         sensordataMap.put(SensorType.DOOR, mutableListOf(frontDoor, balconyDoor))
         sensordataMap.put(SensorType.WINDOW, mutableListOf(livingroomWindow, balconyWindow))
@@ -81,19 +74,21 @@ open class SensorManager {
 
     fun computeWarningLevel() {
         //magic heuristics
-
+        val initialWarningLevel = warningLevel
 
         val doorclosed = sensordataMap[SensorType.DOOR]?.filter { it.isOn() }?.any() ?: false
-        val windowOpen = sensordataMap[SensorType.WINDOW]?.filter { it.isOn() }?.any() ?: false
+        val window = sensordataMap[SensorType.WINDOW]?.filter { it.isOn() }?.firstOrNull() ?: null
+        if(window == null) return;
         val hasNoMovement = sensordataMap[SensorType.DOOR]?.filterNot { it.isOn() }?.any() ?: false
 
-        warningLevel = WaringLevel.GREEN
-        if (windowOpen && hasNoMovement) {
-            warningLevel = WaringLevel.YELLOW
+        warningLevel = WarningLevel.GREEN
+        if (window.isOn() && hasNoMovement) {
+            warningLevel = WarningLevel.YELLOW
             if (doorclosed) {
-                warningLevel = WaringLevel.RED
-
-                // toDo call
+                warningLevel = WarningLevel.RED
+                if(warningLevel != initialWarningLevel){
+                    CallHelper.callPhoneAlarm("Hi Mrs Theresa you left the ${window.location} window open")
+                }
             }
         }
 
@@ -118,6 +113,7 @@ open class SensorManager {
         val current = sensor.dataHistory.last().value
 
         sensor.dataHistory.add(SensorData(!current, LocalDateTime.now()))
+        computeWarningLevel()
 
         computeWarningLevel()
     }
