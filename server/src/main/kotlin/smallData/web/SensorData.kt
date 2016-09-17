@@ -127,6 +127,11 @@ open class SensorManager {
         response.status = HttpServletResponse.SC_CREATED
     }
 
+    @PostMapping("enableWarnings")
+    fun setWarning(){
+        warningsEnabled = true;
+    }
+
 }
 
 
