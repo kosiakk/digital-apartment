@@ -19,12 +19,7 @@ import javax.servlet.http.HttpServletResponse
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
     var warningLevel: WaringLevel = WaringLevel.GREEN
-    private var _warningsEnabled = false
-    var warningsEnabled: Boolean
-        get() = _warningsEnabled
-        set(value) {
-            _warningsEnabled = value
-        };
+    var warningsEnabled: Boolean = false
 
     enum class WaringLevel {
         GREEN, YELLOW, RED
@@ -106,14 +101,6 @@ open class SensorManager {
 
     }
 
-
-    @PostMapping("register")
-    fun registerSensor(sensortype: String, location: String, id: Int) {
-        when (sensortype) {
-            "brigthness" -> sensordata.add(Sensor(location, SensorType.BRIGHTNESS, mutableListOf()))
-        }
-    }
-
     @PostMapping("toggle")
     fun toggle(body: Reader, response: HttpServletResponse) {
         val location = body.readText()
@@ -128,8 +115,9 @@ open class SensorManager {
     }
 
     @PostMapping("enableWarnings")
-    fun setWarning(){
-        warningsEnabled = true;
+    fun setWarning(response: HttpServletResponse) {
+        warningsEnabled = true
+        response.sendRedirect("/backend")
     }
 
 }

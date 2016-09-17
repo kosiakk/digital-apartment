@@ -1,9 +1,6 @@
 package smallData.web
 
-import kotlinx.html.DIV
-import kotlinx.html.div
-import kotlinx.html.img
-import kotlinx.html.span
+import kotlinx.html.*
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -40,15 +37,14 @@ class Backend {
                 sensor(sensor.livingroomWindow, 540, 140)
 
 
-//                val bedroomMovement = SensorManager.Sensor("Bedroom", SensorManager.SensorType.MOVEMENT)
-//                val  = SensorManager.Sensor("Living room", SensorManager.SensorType.MOVEMENT)
-//                val livingroomWindow = SensorManager.Sensor("Living room", SensorManager.SensorType.WINDOW)
-//                val kitchenMovement = SensorManager.Sensor("Kitchen", SensorManager.SensorType.MOVEMENT)
-//                val kitchenRefrigator = SensorManager.Sensor("Kitchen", SensorManager.SensorType.WINDOW)
-//                val  = SensorManager.Sensor("Front door", SensorManager.SensorType.DOOR)
-//                val balconyDoor = SensorManager.Sensor("Balcony door", SensorManager.SensorType.DOOR)
-//                val balconyWindow = SensorManager.Sensor("Balcony window", SensorManager.SensorType.WINDOW)
+                if (!sensor.warningsEnabled) {
+                    form(method = FormMethod.post, action = "/sensor/enableWarnings") {
+                        submitInput() {
+                            value = "Enable alerts"
+                        }
+                    }
 
+                }
 
             }
 
