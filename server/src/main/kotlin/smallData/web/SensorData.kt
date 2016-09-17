@@ -49,9 +49,7 @@ open class SensorManager {
     @PostConstruct
     fun initializeWithDummyData() {
         //dummy data helpers
-        val bedroomBrightness = Sensor("Bedroom", SensorType.BRIGHTNESS)
         val bedroomMovement = Sensor("Bedroom", SensorType.MOVEMENT)
-        val livingroomBrightness = Sensor("Living room", SensorType.BRIGHTNESS)
         val livingroomMovement = Sensor("Living room", SensorType.MOVEMENT)
         val livingroomWindow = Sensor("Living room", SensorType.WINDOW)
         val kitchenMovement = Sensor("Kitchen", SensorType.MOVEMENT)
@@ -63,23 +61,14 @@ open class SensorManager {
 
         val rng = Random(1337)
 
-        var nValues = 20
-
-        for (i in 0..nValues) {
-            bedroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-            bedroomMovement.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-            livingroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-            livingroomMovement.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-        }
+        val nValues = 20
 
         sensordataMap.put(SensorType.MOVEMENT, mutableListOf(livingroomMovement, kitchenMovement, bedroomMovement))
-        sensordataMap.put(SensorType.BRIGHTNESS, mutableListOf(bedroomBrightness, livingroomBrightness))
         sensordataMap.put(SensorType.DOOR, mutableListOf(frontDoor, balconyDoor, kitchenRefrigator))
         sensordataMap.put(SensorType.WINDOW, mutableListOf(livingroomWindow, balconyWindow))
 
         sensordataMap.values.forEach { sensordata.addAll(it) }
 
-        nValues = 5
         for (i in 0..nValues) {
             for (s in sensordata) {
                 s.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))

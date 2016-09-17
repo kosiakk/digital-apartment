@@ -94,7 +94,7 @@ class Welcome {
                         +Date().toString()
 
 
-                        ul("mdl-list") {
+                        ul("mdl-list  online-update") {
 
                             sensor.sensordata.forEach { sensor ->
 

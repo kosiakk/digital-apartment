@@ -12,12 +12,14 @@ function refr() {
             var fetched = xhr.response;
             if (fetched) {
 
-                var el = document.createElement( 'html' );
+                var el = document.createElement('html');
                 el.innerHTML = fetched;
 
-                var bodyNew = el.getElementsByTagName("body");
-                var bodyOld = document.getElementsByTagName("body");
-                morphdom(bodyOld[0], bodyNew[0]);
+                var bodyNew = el.getElementsByClassName("online-update");
+                var bodyOld = document.getElementsByTagName("online-update");
+                for (var i = 0; i < bodyNew.length; i++) {
+                    morphdom(bodyOld[i], bodyNew[i]);
+                }
             }
 
             setTimeout(refr, 5000);
