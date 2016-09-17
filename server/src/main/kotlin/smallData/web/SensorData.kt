@@ -112,7 +112,9 @@ open class SensorManager {
 
         val sensor = sensordata.find { it.location == location } ?: return
 
-        sensor.dataHistory.add(SensorData(false, LocalDateTime.now()))
+        val current = sensor.dataHistory.last().value
+
+        sensor.dataHistory.add(SensorData(!current, LocalDateTime.now()))
 
     }
 

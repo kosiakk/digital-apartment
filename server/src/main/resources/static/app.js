@@ -2,6 +2,8 @@
  * Created by Alexander Kosenkov on 17.09.2016.
  */
 
+var delay = 1000;
+
 function refr() {
 
     var xhr = new XMLHttpRequest();
@@ -16,13 +18,13 @@ function refr() {
                 el.innerHTML = fetched;
 
                 var bodyNew = el.getElementsByClassName("online-update");
-                var bodyOld = document.getElementsByTagName("online-update");
+                var bodyOld = document.getElementsByClassName("online-update");
                 for (var i = 0; i < bodyNew.length; i++) {
                     morphdom(bodyOld[i], bodyNew[i]);
                 }
             }
 
-            setTimeout(refr, 5000);
+            setTimeout(refr, delay);
         }
     };
 
@@ -30,9 +32,9 @@ function refr() {
     xhr.send();
 }
 
-var toUpdate = document.getElementsByTagName("online-update");
+var toUpdate = document.getElementsByClassName("online-update");
 if (toUpdate.length > 0)
-    setTimeout(refr, 5000);
+    setTimeout(refr, delay);
 
 
 function toggle(sensor) {
