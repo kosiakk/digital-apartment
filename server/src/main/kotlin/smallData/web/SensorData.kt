@@ -19,6 +19,12 @@ import javax.servlet.http.HttpServletResponse
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
     var warningLevel: WaringLevel = WaringLevel.GREEN
+    private var _warningsEnabled = false
+    var warningsEnabled: Boolean
+        get() = _warningsEnabled
+        set(value) {
+            _warningsEnabled = value
+        };
 
     enum class WaringLevel {
         GREEN, YELLOW, RED
@@ -91,7 +97,7 @@ open class SensorManager {
             if (doorClosed) {
                 warningLevel = WaringLevel.RED
 
-                if (warningLevel != initialWarningLevel) {
+                if (warningLevel != initialWarningLevel && warningsEnabled) {
                     CallHelper.callPhoneAlarm("Hi Mrs Theresa you left the ${window.location} open")
                 }
             }
