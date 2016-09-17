@@ -18,9 +18,14 @@
     font-size: 90px;
 }
 
-.app__visible-if-compact  {
+.app__visible-if-compact {
     display: none;
 }
+
 .is-compact > .mdl-layout__header-row > .app__visible-if-compact {
     display: inherit;
+}
+
+.app--layout-background {
+    background: url('/img/Lines-Green-Yellow-Rectangle-Abstract-Pattern.jpg') center / cover;
 }
