@@ -29,11 +29,10 @@ open class SensorManager {
 
     enum class SensorType(val description: String, val stateOnIcon: String, val stateOffIcon: String, stateOnColor: String, stateOffColor: String) {
         BRIGHTNESS("brightness", "lightbulb", "lightbulb", "yellow", "black"),
-        MOVEMENT("movement", "walk", "human-male", "blue", "black"),
-        FIREDETECTOR("fire detector", "fire", "fire", "red", "black"),
-        WATERTEMP("water temperature", "oil-temperature", "oil-temperature", "red", "black"),
-        DOOR("door open", "lock-open", "lock", "yellow", "black"),
-        WINDOW("window open", "lock-open", "lock", "yellow", "black")
+        MOVEMENT("movement", "directions walk", "accessibility", "blue", "black"),
+        FIREDETECTOR("fire detector", "pets", "pets", "red", "black"),
+        DOOR("door open", "lock open", "lock", "yellow", "black"),
+        WINDOW("window open", "lock open", "lock", "yellow", "black")
     }
 
     data class Sensor(val location: String, val type: SensorType, val dataHistory: MutableList<SensorData> = mutableListOf()) {
@@ -55,7 +54,6 @@ open class SensorManager {
         val livingroomBrightness = Sensor("Living room", SensorType.BRIGHTNESS)
         val livingroomMovement = Sensor("Living room", SensorType.MOVEMENT)
         val livingroomWindow = Sensor("Living room", SensorType.WINDOW)
-        val kitchenWaterTemp = Sensor("Kitchen", SensorType.WATERTEMP)
         val kitchenMovement = Sensor("Kitchen", SensorType.MOVEMENT)
         val kitchenRefrigator = Sensor("Kitchen", SensorType.WINDOW)
         val frontDoor = Sensor("Front door", SensorType.DOOR)
