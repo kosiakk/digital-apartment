@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import smallData.spring.flush
 import smallData.view.materialPage
 import smallData.view.mdl_color
-import smallData.view.mdl_icon
 import java.io.PrintWriter
-import java.util.*
 import javax.inject.Inject
 import javax.servlet.http.HttpServletResponse
 
@@ -53,13 +51,13 @@ class Welcome {
 
                         spacer()
 
-                        span("app__visible-if-compact") {
+                        /*span("app__visible-if-compact") {
                             mdl_icon("check circle")
                             +"all is OK"
-                        }
+                        }*/
 
                         nav(classes = "mdl-navigation") {
-                            a(classes = "mdl-navigation__link", href = "#") { +"Link" }
+                            a(classes = "mdl-navigation__link", href = "#") { +"Logout" }
                         }
                     }
 
@@ -69,17 +67,17 @@ class Welcome {
 
                         spacer()
 
-                        mdl_icon("check circle") {
+                       /* mdl_icon("check circle") {
                             classes += "md-90"
                         }
 
-                        +"all is OK"
+                        +"all is OK"*/
                     }
                 }
                 div("mdl-layout__drawer") {
                     span("mdl-layout-title") { +title }
                     nav(classes = "mdl-navigation") {
-                        a(classes = "mdl-navigation__link", href = "#") { +"Link" }
+                        a(classes = "mdl-navigation__link", href = "#") { +"Statistical Data" }
                     }
                 }
 
@@ -88,11 +86,6 @@ class Welcome {
                 div("mdl-layout__content") {
 
                     div("page-content") {
-
-                        h4 { +"Details:" }
-
-
-                        +Date().toString()
 
 
                         ul("mdl-list  online-update") {

@@ -37,3 +37,7 @@
 .app--background-yellow {
     background: url('/img/warning.jpg') center / cover;
 }
+
+.app--background-yellow > .mdl-layout-title {
+    color: white !important;
+}
