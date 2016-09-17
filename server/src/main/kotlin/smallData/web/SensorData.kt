@@ -2,6 +2,7 @@ package smallData.web
 
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.context.WebApplicationContext
@@ -16,12 +17,15 @@ import javax.annotation.PostConstruct
 @RequestMapping("/sensor")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
-    private var _warningLevel : Int = 0;
-    var warningLevel : Int
-        get() = _warningLevel
+    var warningLevel: WaringLevel
+        get() = warningLevel
         private set(value) {
-            _warningLevel = value
+            warningLevel = value
         }
+
+    enum class WaringLevel {
+        GREEN, YELLOW, RED
+    }
 
     enum class SensorType(val description: String, val stateOnIcon: String, val stateOffIcon: String, stateOnColor: String, stateOffColor: String) {
         BRIGHTNESS("brightness", "lightbulb", "lightbulb", "yellow", "black"),
@@ -32,29 +36,33 @@ open class SensorManager {
         WINDOW("window open", "lock-open", "lock", "yellow", "black")
     }
 
-    data class Sensor(val location: String, val type: SensorType, val dataHistory: MutableList<SensorData> = mutableListOf())
+    data class Sensor(val location: String, val type: SensorType, val dataHistory: MutableList<SensorData> = mutableListOf()) {
+        fun isOn() = dataHistory.isNotEmpty() && dataHistory.last().value == true
+    }
 
     open class SensorData(val value: Boolean, val timestamp: LocalDateTime)
     class TimestampedSensorData(val value: Boolean, val timestamp: LocalDateTime)
 
-    //dummy data helpers
-    val bedroomBrightness = Sensor("Bedroom", SensorType.BRIGHTNESS)
-    val bedroomMovement = Sensor("Bedroom", SensorType.MOVEMENT)
-    val livingroomBrightness = Sensor("Living room", SensorType.BRIGHTNESS)
-    val livingroomMovement = Sensor("Living room", SensorType.MOVEMENT)
-    val livingroomWindow = Sensor("Living room", SensorType.WINDOW)
-    val kitchenWaterTemp = Sensor("Kitchen", SensorType.WATERTEMP)
-    val kitchenMovement = Sensor("Kitchen", SensorType.MOVEMENT)
-    val kitchenRefrigator = Sensor("Kitchen", SensorType.WINDOW)
-    val frontDoor = Sensor("Front door", SensorType.DOOR)
-    val balconyDoor = Sensor("Balcony door", SensorType.DOOR)
-    val balconyWindow = Sensor("Balcony window", SensorType.WINDOW)
 
     val sensordata = ArrayList<Sensor>()
     val sensordataMap = HashMap<SensorType, MutableList<Sensor>>()
 
     @PostConstruct
     fun initializeWithDummyData() {
+        //dummy data helpers
+        val bedroomBrightness = Sensor("Bedroom", SensorType.BRIGHTNESS)
+        val bedroomMovement = Sensor("Bedroom", SensorType.MOVEMENT)
+        val livingroomBrightness = Sensor("Living room", SensorType.BRIGHTNESS)
+        val livingroomMovement = Sensor("Living room", SensorType.MOVEMENT)
+        val livingroomWindow = Sensor("Living room", SensorType.WINDOW)
+        val kitchenWaterTemp = Sensor("Kitchen", SensorType.WATERTEMP)
+        val kitchenMovement = Sensor("Kitchen", SensorType.MOVEMENT)
+        val kitchenRefrigator = Sensor("Kitchen", SensorType.WINDOW)
+        val frontDoor = Sensor("Front door", SensorType.DOOR)
+        val balconyDoor = Sensor("Balcony door", SensorType.DOOR)
+        val balconyWindow = Sensor("Balcony window", SensorType.WINDOW)
+
+
         val rng = Random(1337)
 
         var nValues = 20
@@ -73,25 +81,49 @@ open class SensorManager {
 
         sensordataMap.values.forEach { sensordata.addAll(it) }
 
+        nValues = 5
         for (i in 0..nValues) {
-            for ( s in sensordata){
+            for (s in sensordata) {
                 s.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
             }
         }
     }
 
-    @PostMapping("/register")
+    fun computeWarningLevel() {
+        //magic heuristics
+
+
+        val doorclosed = sensordataMap.get(SensorType.DOOR)?.filter { it.isOn() }?.any() ?: false
+        val windowOpen = sensordataMap.get(SensorType.WINDOW)?.filter { it.isOn() }?.any() ?: false
+        val hasNoMovement = sensordataMap.get(SensorType.DOOR)?.filterNot { it.isOn() }?.any() ?: false
+
+        if (windowOpen && hasNoMovement) {
+            warningLevel = WaringLevel.YELLOW
+            if (doorclosed) {
+                warningLevel = WaringLevel.RED
+            }
+        }
+
+
+    }
+
+
+    @PostMapping("register")
     fun registerSensor(sensortype: String, location: String, id: Int) {
         when (sensortype) {
             "brigthness" -> sensordata.add(Sensor(location, SensorType.BRIGHTNESS, mutableListOf()))
         }
-
-        @PostMapping("data")
-        fun putSensorData(id: Int, value: Boolean) {
-
-        }
     }
 
+    @PostMapping("data")
+    fun putSensorData(id: Int, value: Boolean) {
+
+    }
+
+    @GetMapping("closedoor")
+    fun closeDoor() {
+        sensordataMap.get(SensorType.DOOR)?.filter { it.location == "Front door" }?.forEach { d -> d.dataHistory.add(SensorData(false, LocalDateTime.now())) }
+    }
 
 }
 
