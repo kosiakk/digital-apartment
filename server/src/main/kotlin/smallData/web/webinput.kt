@@ -72,14 +72,12 @@ object CallHelper{
     }
 
     fun callPhoneAlarm(message: String, phonenumber: String = officephone3131) {
+        println(message)
         try {
             val url = "$alarmURL&token=$token&phonenumber=$phonenumber&msg=$message"
             url.httpGet().responseString { request, response, result ->
                 //do something with response
-                when (result) {
-                    else -> println("no result")
-
-                }
+                println(result)
             }
         } catch (e: IOException) {
             e.printStackTrace()
