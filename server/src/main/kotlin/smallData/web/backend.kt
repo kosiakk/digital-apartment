@@ -37,6 +37,8 @@ class Backend {
 
                 sensor(sensor.frontDoor, 450, 240)
 
+                sensor(sensor.livingroomWindow, 540, 140)
+
 
 //                val bedroomMovement = SensorManager.Sensor("Bedroom", SensorManager.SensorType.MOVEMENT)
 //                val  = SensorManager.Sensor("Living room", SensorManager.SensorType.MOVEMENT)

@@ -34,12 +34,11 @@ open class SensorManager {
 
     val bedroomMovement = Sensor("Bedroom", SensorType.MOVEMENT)
     val livingroomMovement = Sensor("Living room", SensorType.MOVEMENT)
-    val livingroomWindow = Sensor("Living room", SensorType.WINDOW)
+    val livingroomWindow = Sensor("Living room window", SensorType.WINDOW)
     val kitchenMovement = Sensor("Kitchen", SensorType.MOVEMENT)
     val kitchenRefrigator = Sensor("Kitchen", SensorType.WINDOW)
     val frontDoor = Sensor("Front door", SensorType.DOOR)
     val balconyDoor = Sensor("Balcony door", SensorType.DOOR)
-    val balconyWindow = Sensor("Balcony window", SensorType.WINDOW)
 
 
     data class Sensor(val location: String, val type: SensorType, val dataHistory: MutableList<SensorData> = mutableListOf()) {
@@ -64,7 +63,7 @@ open class SensorManager {
 
         sensordataMap.put(SensorType.MOVEMENT, mutableListOf(livingroomMovement, kitchenMovement, bedroomMovement))
         sensordataMap.put(SensorType.DOOR, mutableListOf(frontDoor, balconyDoor))
-        sensordataMap.put(SensorType.WINDOW, mutableListOf(livingroomWindow, balconyWindow))
+        sensordataMap.put(SensorType.WINDOW, mutableListOf(livingroomWindow))
 
         sensordataMap.values.forEach { sensordata.addAll(it) }
 
