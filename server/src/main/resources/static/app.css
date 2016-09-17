@@ -22,5 +22,5 @@
     display: none;
 }
 .is-compact > .mdl-layout__header-row > .app__visible-if-compact {
-    display: block;
+    display: inherit;
 }

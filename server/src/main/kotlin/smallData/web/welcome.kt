@@ -45,7 +45,7 @@ class Welcome {
 
                         spacer()
 
-                        div("app__visible-if-compact") {
+                        span("app__visible-if-compact") {
                             mdl_icon("check circle")
                             +"all is OK"
                         }
