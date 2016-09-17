@@ -43,7 +43,9 @@ class Welcome {
                     mdl_color("light-green", "grey-800")
 
                     classes += "mdl-layout__header--transparent  app--layout-background"
-                    classes += "app--background-" + sensor.warningLevel.name.toLowerCase()
+
+                    classes += "online-update-style"
+                    style = "background: url(/img/${sensor.warningLevel.name.toLowerCase()}.jpg) center / cover;"
 
                     // Top row, always visible
                     div("mdl-layout__header-row") {

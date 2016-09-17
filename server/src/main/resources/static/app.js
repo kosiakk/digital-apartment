@@ -14,13 +14,19 @@ function refr() {
             var fetched = xhr.response;
             if (fetched) {
 
-                var el = document.createElement('html');
-                el.innerHTML = fetched;
+                var updateEl = document.createElement('html');
+                updateEl.innerHTML = fetched;
 
-                var bodyNew = el.getElementsByClassName("online-update");
+                var bodyNew = updateEl.getElementsByClassName("online-update");
                 var bodyOld = document.getElementsByClassName("online-update");
                 for (var i = 0; i < bodyNew.length; i++) {
                     morphdom(bodyOld[i], bodyNew[i]);
+                }
+
+                bodyNew = updateEl.getElementsByClassName("online-update-style");
+                bodyOld = document.getElementsByClassName("online-update-style");
+                for (i = 0; i < bodyNew.length; i++) {
+                    bodyOld[i].style.backgroundImage = bodyNew[i].style.backgroundImage
                 }
             }
 
