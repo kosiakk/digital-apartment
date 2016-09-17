@@ -42,4 +42,5 @@ function toggle(sensor) {
     xhr.open('POST', "/sensor/toggle", true);
     xhr.send(sensor);
 
+    setTimeout(refr, 10);
 }

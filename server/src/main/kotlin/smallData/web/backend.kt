@@ -1,5 +1,6 @@
 package smallData.web
 
+import kotlinx.html.DIV
 import kotlinx.html.div
 import kotlinx.html.img
 import kotlinx.html.span
@@ -31,22 +32,18 @@ class Backend {
                     style = "width: 600px"
                 }
 
+                sensor(sensor.balconyDoor, 70, 130)
+                sensor(sensor.livingroomMovement, 160, 120)
 
-                val sensor1 = sensor.balconyDoor
-                span {
-                    style = "position:absolute; top: 130px; left: 70px;"
-
-                    onClick = "toggle('${sensor1.location}');"
-                    sensorIcon(sensor1)
-                }
+                sensor(sensor.frontDoor, 450, 240)
 
 
 //                val bedroomMovement = SensorManager.Sensor("Bedroom", SensorManager.SensorType.MOVEMENT)
-//                val livingroomMovement = SensorManager.Sensor("Living room", SensorManager.SensorType.MOVEMENT)
+//                val  = SensorManager.Sensor("Living room", SensorManager.SensorType.MOVEMENT)
 //                val livingroomWindow = SensorManager.Sensor("Living room", SensorManager.SensorType.WINDOW)
 //                val kitchenMovement = SensorManager.Sensor("Kitchen", SensorManager.SensorType.MOVEMENT)
 //                val kitchenRefrigator = SensorManager.Sensor("Kitchen", SensorManager.SensorType.WINDOW)
-//                val frontDoor = SensorManager.Sensor("Front door", SensorManager.SensorType.DOOR)
+//                val  = SensorManager.Sensor("Front door", SensorManager.SensorType.DOOR)
 //                val balconyDoor = SensorManager.Sensor("Balcony door", SensorManager.SensorType.DOOR)
 //                val balconyWindow = SensorManager.Sensor("Balcony window", SensorManager.SensorType.WINDOW)
 
@@ -55,5 +52,14 @@ class Backend {
 
         }
 
+    }
+
+    private fun DIV.sensor(s: SensorManager.Sensor, y: Int, x: Int) {
+        span {
+            style = "position:absolute; top: ${x}px; left: ${y}px;"
+
+            onClick = "toggle('${s.location}');"
+            sensorIcon(s)
+        }
     }
 }

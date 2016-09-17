@@ -7,12 +7,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.context.WebApplicationContext
 import java.io.Reader
-import java.net.URL
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.util.*
 import javax.annotation.PostConstruct
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Created by P on 17.09.2016.
@@ -21,8 +19,13 @@ import javax.annotation.PostConstruct
 @RequestMapping("/sensor")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 open class SensorManager {
-    var warningLevel: WarningLevel = WarningLevel.GREEN
-    enum class WarningLevel {
+    var warningLevel: WaringLevel
+        get() = warningLevel
+        private set(value) {
+            warningLevel = value
+        }
+
+    enum class WaringLevel {
         GREEN, YELLOW, RED
     }
 
@@ -43,6 +46,7 @@ open class SensorManager {
     val balconyDoor = Sensor("Balcony door", SensorType.DOOR)
     val balconyWindow = Sensor("Balcony window", SensorType.WINDOW)
 
+
     data class Sensor(val location: String, val type: SensorType, val dataHistory: MutableList<SensorData> = mutableListOf()) {
         fun isOn() = dataHistory.isNotEmpty() && dataHistory.last().value == true
     }
@@ -57,8 +61,12 @@ open class SensorManager {
     @PostConstruct
     fun initializeWithDummyData() {
         //dummy data helpers
+
+
         val rng = Random(1337)
+
         val nValues = 20
+
         sensordataMap.put(SensorType.MOVEMENT, mutableListOf(livingroomMovement, kitchenMovement, bedroomMovement))
         sensordataMap.put(SensorType.DOOR, mutableListOf(frontDoor, balconyDoor))
         sensordataMap.put(SensorType.WINDOW, mutableListOf(livingroomWindow, balconyWindow))
@@ -104,8 +112,7 @@ open class SensorManager {
     }
 
     @PostMapping("toggle")
-    fun toggle(body: Reader) {
-
+    fun toggle(body: Reader, response: HttpServletResponse) {
         val location = body.readText()
 
         val sensor = sensordata.find { it.location == location } ?: return
@@ -113,14 +120,11 @@ open class SensorManager {
         val current = sensor.dataHistory.last().value
 
         sensor.dataHistory.add(SensorData(!current, LocalDateTime.now()))
-        computeWarningLevel()
 
         computeWarningLevel()
     }
 
-    @GetMapping("closedoor")
-    fun closeDoor() {
-        sensordataMap[SensorType.DOOR]?.filter { it.location == "Front door" }?.forEach { d -> d.dataHistory.add(SensorData(false, LocalDateTime.now())) }
+        response.status = HttpServletResponse.SC_CREATED
     }
 
 }
