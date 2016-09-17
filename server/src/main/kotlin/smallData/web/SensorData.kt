@@ -33,14 +33,18 @@ class SensorManager{
     val livingroomBrightness = Sensor("livingroom",SensorType.BRIGHTNESS, mutableListOf())
     val bedroomMovement = Sensor("bedroom",SensorType.MOVEMENT, mutableListOf())
 
+    val sensordata = ArrayList<SensorData>()
 
     fun initializeWithDummyData(){
         val rng = Random(1337)
 
-        bedroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-        bedroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-        bedroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-        bedroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
+        var nValues = 20
+
+        for (i in 0..nValues){
+            bedroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
+            bedroomMovement.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
+            livingroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
+        }
 
 
     }
