@@ -67,14 +67,14 @@ open class SensorManager {
         val nValues = 20
 
         sensordataMap.put(SensorType.MOVEMENT, mutableListOf(livingroomMovement, kitchenMovement, bedroomMovement))
-        sensordataMap.put(SensorType.DOOR, mutableListOf(frontDoor, balconyDoor, kitchenRefrigator))
+        sensordataMap.put(SensorType.DOOR, mutableListOf(frontDoor, balconyDoor))
         sensordataMap.put(SensorType.WINDOW, mutableListOf(livingroomWindow, balconyWindow))
 
         sensordataMap.values.forEach { sensordata.addAll(it) }
 
         for (i in 0..nValues) {
             for (s in sensordata) {
-                s.dataHistory.add(SensorData(rng.nextBoolean(), LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
+                s.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
             }
         }
     }
@@ -83,14 +83,17 @@ open class SensorManager {
         //magic heuristics
 
 
-        val doorclosed = sensordataMap.get(SensorType.DOOR)?.filter { it.isOn() }?.any() ?: false
-        val windowOpen = sensordataMap.get(SensorType.WINDOW)?.filter { it.isOn() }?.any() ?: false
-        val hasNoMovement = sensordataMap.get(SensorType.DOOR)?.filterNot { it.isOn() }?.any() ?: false
+        val doorclosed = sensordataMap[SensorType.DOOR]?.filter { it.isOn() }?.any() ?: false
+        val windowOpen = sensordataMap[SensorType.WINDOW]?.filter { it.isOn() }?.any() ?: false
+        val hasNoMovement = sensordataMap[SensorType.DOOR]?.filterNot { it.isOn() }?.any() ?: false
 
+        warningLevel = WaringLevel.GREEN
         if (windowOpen && hasNoMovement) {
             warningLevel = WaringLevel.YELLOW
             if (doorclosed) {
                 warningLevel = WaringLevel.RED
+
+                // toDo call
             }
         }
 
@@ -116,11 +119,12 @@ open class SensorManager {
 
         sensor.dataHistory.add(SensorData(!current, LocalDateTime.now()))
 
+        computeWarningLevel()
     }
 
     @GetMapping("closedoor")
     fun closeDoor() {
-        sensordataMap.get(SensorType.DOOR)?.filter { it.location == "Front door" }?.forEach { d -> d.dataHistory.add(SensorData(false, LocalDateTime.now())) }
+        sensordataMap[SensorType.DOOR]?.filter { it.location == "Front door" }?.forEach { d -> d.dataHistory.add(SensorData(false, LocalDateTime.now())) }
     }
 
 }
