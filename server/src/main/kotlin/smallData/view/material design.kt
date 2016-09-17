@@ -72,6 +72,8 @@ fun PrintWriter.materialPage(title: String, pageStyle: String? = null, bodyConte
             link(rel = "stylesheet", href = "https://fonts.googleapis.com/icon?family=Material+Icons")
 
             script(type = ScriptType.textJavaScript, src = "/material.js") { async = true }
+            script(type = ScriptType.textJavaScript, src = "/app.js") { async = true }
+            script(type = ScriptType.textJavaScript, src = "/morphdom-umd.js") { async = true }
             if (pageStyle != null)
                 style(type = "text/css", content = pageStyle)
 
