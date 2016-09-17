@@ -30,10 +30,11 @@ class SensorManager{
     class TimestampedSensorData(val value: Boolean, val timestamp: LocalDateTime)
 
     val bedroomBrightness = Sensor("bedroom",SensorType.BRIGHTNESS, mutableListOf())
-    val livingroomBrightness = Sensor("livingroom",SensorType.BRIGHTNESS, mutableListOf())
     val bedroomMovement = Sensor("bedroom",SensorType.MOVEMENT, mutableListOf())
+    val livingroomBrightness = Sensor("livingroom",SensorType.BRIGHTNESS, mutableListOf())
+    val livingroomMovement = Sensor("livingroom",SensorType.MOVEMENT, mutableListOf())
 
-    val sensordata = ArrayList<SensorData>()
+    val sensordata = ArrayList<Sensor>()
 
     fun initializeWithDummyData(){
         val rng = Random(1337)
@@ -44,8 +45,10 @@ class SensorManager{
             bedroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
             bedroomMovement.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
             livingroomBrightness.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
-        }
+            livingroomMovement.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays( rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
 
+        }
+        sensordata.addAll(listOf(bedroomBrightness,bedroomMovement,livingroomBrightness,livingroomMovement))
 
     }
 
