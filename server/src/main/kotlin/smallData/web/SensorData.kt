@@ -106,7 +106,7 @@ open class SensorManager {
     }
 
     @PostMapping("toggle")
-    fun putSensorData(body: Reader) {
+    fun toggle(body: Reader) {
 
         val location = body.readText()
 
