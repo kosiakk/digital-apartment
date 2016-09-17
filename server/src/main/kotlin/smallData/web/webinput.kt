@@ -1,18 +1,14 @@
 package smallData.web
 
-import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.result.getAs
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import java.io.File
 import java.io.IOException
 import java.io.PrintWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
