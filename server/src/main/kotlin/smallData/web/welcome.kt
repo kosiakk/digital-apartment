@@ -45,6 +45,7 @@ class Welcome {
                     mdl_color("light-green", "grey-800")
 
                     classes += "mdl-layout__header--transparent  app--layout-background"
+                    classes += "app--background-" + sensor.warningLevel.name.toLowerCase()
 
                     // Top row, always visible
                     div("mdl-layout__header-row") {
@@ -122,7 +123,6 @@ class Welcome {
                                     }
                                 }
                             }
-
 
 
                         }

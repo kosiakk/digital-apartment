@@ -6,8 +6,10 @@ import smallData.spring.HtmlOutput
 import java.io.PrintWriter
 
 
-fun CommonAttributeGroupFacade.mdl_color(color: String, text: String? = null) {
-    classes += "mdl-color--$color"
+fun CommonAttributeGroupFacade.mdl_color(color: String? = null, text: String? = null) {
+    if (color != null)
+        classes += "mdl-color--$color"
+
     if (text != null)
         classes += "mdl-color-text--$text"
 }
