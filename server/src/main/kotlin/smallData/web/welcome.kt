@@ -1,13 +1,13 @@
 package smallData.web
 
-import kotlinx.html.BODY
-import kotlinx.html.body
+import kotlinx.html.div
 import kotlinx.html.h2
-import kotlinx.html.p
-import kotlinx.html.stream.appendHTML
+import kotlinx.html.header
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import smallData.spring.flush
+import smallData.view.materialPage
 import java.io.PrintWriter
 import javax.servlet.http.HttpServletResponse
 
@@ -21,31 +21,32 @@ class Welcome {
 
     @GetMapping
     fun index(response: HttpServletResponse) {
-        response.sendRedirect("/view?q=17592186047215")
+        response.sendRedirect("/welcome?apartment=1920")
     }
 
 
-    @GetMapping("view")
-    fun view(result: PrintWriter) {
+    @GetMapping("welcome")
+    fun view(result: PrintWriter, apartment: Int?) {
 
-        result.appendHTML().body {
+        result.materialPage("Apt. $apartment") {
 
-            header("Welcome!")
+            div("mdl-layout mdl-layout--mdl-js-layout") {
+                header("mdl-layout__header mdl-layout--waterfall") {
 
-            val what = "cool app"
+                    div("mdl-layout__header-row") {
+                        style = "height: 5 cm"
+                        +"text"
+                    }
 
-            p {
-                +"This is the $what to track activity within an apartment"
+                }
             }
+            flush()
+
+            h2{+"Details:"}
 
         }
 
-    }
 
-    private fun BODY.header(s: String) {
-        h2 {
-            +s
-        }
     }
 
 
