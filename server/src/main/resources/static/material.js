@@ -1136,7 +1136,7 @@ MaterialMenu.prototype.Constant_ = {
     // Total duration of the menu animation.
     TRANSITION_DURATION_SECONDS: 0.3,
     // The fraction of the total duration we want to use for menu item animations.
-    TRANSITION_DURATION_FRACTION: 0.8,
+    TRANSITION_DURATION_FRACTION: 5.8,
     // How long the menu stays open after choosing an option (so the user can see
     // the ripple).
     CLOSE_TIMEOUT: 150

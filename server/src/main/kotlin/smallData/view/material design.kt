@@ -6,7 +6,7 @@ import smallData.spring.HtmlOutput
 import java.io.PrintWriter
 
 
-fun BEM.mdl_color(color: String, text: String? = null) {
+fun CommonAttributeGroupFacade.mdl_color(color: String, text: String? = null) {
     classes += "mdl-color--$color"
     if (text != null)
         classes += "mdl-color-text--$text"
@@ -24,8 +24,14 @@ fun FlowContent.linea_icon(icon: String, size: Int = 64, bodyContent: (IMG.() ->
     }
 }
 
-fun FlowContent.mdl_icon(icon: String, text: String? = null) {
-    i("material-icons") { +icon }
+fun FlowContent.mdl_icon(icon: String, text: String? = null, bodyContent: (I.() -> Unit)? = null) {
+    i("material-icons") {
+        if (bodyContent != null) {
+            bodyContent()
+        }
+
+        +icon
+    }
     if (text != null) {
         span(classes = "visuallyhidden") {
             +text
@@ -42,10 +48,9 @@ fun PrintWriter.materialPage(title: String, pageStyle: String? = null, bodyConte
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0, minimum-scale=1.0")
             link(rel = "stylesheet", href = "/app.css")
             link(rel = "stylesheet", href = "/material.css")
-            link(rel = "stylesheet", href = "/material/icons.css")
             link(rel = "stylesheet", href = "https://fonts.googleapis.com/icon?family=Material+Icons")
+
             script(type = ScriptType.textJavaScript, src = "/material.js") { async = true }
-            script(type = ScriptType.textJavaScript, src = "/app.js") { defer = true }
             if (pageStyle != null)
                 style(type = "text/css", content = pageStyle)
 

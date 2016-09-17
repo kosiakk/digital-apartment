@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import smallData.spring.flush
 import smallData.view.materialPage
+import smallData.view.mdl_color
+import smallData.view.mdl_icon
 import java.io.PrintWriter
 import javax.servlet.http.HttpServletResponse
 
@@ -35,12 +37,18 @@ class Welcome {
                 classes += "mdl-layout--fixed-header"
 
                 header("mdl-layout__header  mdl-layout__header--waterfall") {
+                    mdl_color("light-green", "grey-800")
 
                     // Top row, always visible
                     div("mdl-layout__header-row") {
                         span("mdl-layout-title") { +title }
 
                         spacer()
+
+                        div("app__visible-if-compact") {
+                            mdl_icon("check circle")
+                            +"all is OK"
+                        }
 
                         nav(classes = "mdl-navigation") {
                             a(classes = "mdl-navigation__link", href = "#") { +"Link" }
@@ -49,8 +57,21 @@ class Welcome {
 
                     // Bottom row, not visible on scroll
                     div("mdl-layout__header-row") {
+                        style = "height: 50vh"
+
                         spacer()
-                        +"second row"
+
+                        mdl_icon("check circle") {
+                            classes += "md-90"
+                        }
+
+                        +"all is OK"
+                    }
+                }
+                div("mdl-layout__drawer") {
+                    span("mdl-layout-title") { +title }
+                    nav(classes = "mdl-navigation") {
+                        a(classes = "mdl-navigation__link", href = "#") { +"Link" }
                     }
                 }
 
@@ -61,6 +82,9 @@ class Welcome {
                     div("page-content") {
 
                         h2 { +"Details:" }
+
+                        mdl_icon("face")
+
 
                         ul {
                             for (i in 0..50) {
