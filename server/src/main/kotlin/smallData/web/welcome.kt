@@ -64,7 +64,7 @@ class Welcome {
 
                     // Bottom row, not visible on scroll
                     div("mdl-layout__header-row") {
-                        style = "height: 50vh"
+                        style = "height: 30vh"
 
                         spacer()
 
@@ -110,20 +110,14 @@ class Welcome {
                                     }
                                     span("mdl-list__item-secondary-content") {
 
-                                        val onOff = sensor.dataHistory.last().value
+                                        sensorIcon(sensor)
 
-                                        val icon = if (onOff) {
-                                            sensor.type.stateOnIcon
-                                        } else {
-                                            sensor.type.stateOffIcon
-                                        }
+/*
 
-                                        statusIcon(icon, "green")
                                         span("mdl-list__item-secondary-info") {
-
                                             +"closed"
-
                                         }
+*/
 
                                     }
                                 }
@@ -141,13 +135,6 @@ class Welcome {
 
     }
 
-    private fun SPAN.statusIcon(icon: String, color: String) {
-        span("mdl-list__item-secondary-action") {
-            mdl_icon(icon) {
-                mdl_color("white", color)
-            }
-        }
-    }
 
     private fun DIV.spacer() {
         div("mdl-layout-spacer")

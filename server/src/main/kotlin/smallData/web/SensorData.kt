@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.context.WebApplicationContext
+import java.io.Reader
 import java.time.LocalDateTime
 import java.util.*
 import javax.annotation.PostConstruct
@@ -27,13 +28,23 @@ open class SensorManager {
         GREEN, YELLOW, RED
     }
 
-    enum class SensorType(val description: String, val stateOnIcon: String, val stateOffIcon: String, stateOnColor: String, stateOffColor: String) {
-        BRIGHTNESS("brightness", "lightbulb", "lightbulb", "yellow", "black"),
-        MOVEMENT("movement", "directions walk", "accessibility", "blue", "black"),
-        FIREDETECTOR("fire detector", "pets", "pets", "red", "black"),
-        DOOR("door open", "lock open", "lock", "yellow", "black"),
-        WINDOW("window open", "lock open", "lock", "yellow", "black")
+    enum class SensorType(val description: String, val stateOnIcon: String, val stateOffIcon: String, val stateOnColor: String, val stateOffColor: String) {
+        BRIGHTNESS("brightness", "lightbulb", "lightbulb", "yellow", "green"),
+        MOVEMENT("movement", "directions_walk", "accessibility", "blue", "green"),
+        FIREDETECTOR("fire detector", "pets", "pets", "red", "green"),
+        DOOR("door open", "lock_open", "lock", "orange", "green"),
+        WINDOW("window open", "lock_open", "lock", "orange", "green")
     }
+
+    val bedroomMovement = Sensor("Bedroom", SensorType.MOVEMENT)
+    val livingroomMovement = Sensor("Living room", SensorType.MOVEMENT)
+    val livingroomWindow = Sensor("Living room", SensorType.WINDOW)
+    val kitchenMovement = Sensor("Kitchen", SensorType.MOVEMENT)
+    val kitchenRefrigator = Sensor("Kitchen", SensorType.WINDOW)
+    val frontDoor = Sensor("Front door", SensorType.DOOR)
+    val balconyDoor = Sensor("Balcony door", SensorType.DOOR)
+    val balconyWindow = Sensor("Balcony window", SensorType.WINDOW)
+
 
     data class Sensor(val location: String, val type: SensorType, val dataHistory: MutableList<SensorData> = mutableListOf()) {
         fun isOn() = dataHistory.isNotEmpty() && dataHistory.last().value == true
@@ -49,14 +60,6 @@ open class SensorManager {
     @PostConstruct
     fun initializeWithDummyData() {
         //dummy data helpers
-        val bedroomMovement = Sensor("Bedroom", SensorType.MOVEMENT)
-        val livingroomMovement = Sensor("Living room", SensorType.MOVEMENT)
-        val livingroomWindow = Sensor("Living room", SensorType.WINDOW)
-        val kitchenMovement = Sensor("Kitchen", SensorType.MOVEMENT)
-        val kitchenRefrigator = Sensor("Kitchen", SensorType.WINDOW)
-        val frontDoor = Sensor("Front door", SensorType.DOOR)
-        val balconyDoor = Sensor("Balcony door", SensorType.DOOR)
-        val balconyWindow = Sensor("Balcony window", SensorType.WINDOW)
 
 
         val rng = Random(1337)
@@ -71,7 +74,7 @@ open class SensorManager {
 
         for (i in 0..nValues) {
             for (s in sensordata) {
-                s.dataHistory.add(SensorData(false, LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
+                s.dataHistory.add(SensorData(rng.nextBoolean(), LocalDateTime.now().minusDays(rng.nextInt(255).toLong()).minusHours(rng.nextInt(255).toLong())))
             }
         }
     }
@@ -102,8 +105,14 @@ open class SensorManager {
         }
     }
 
-    @PostMapping("data")
-    fun putSensorData(id: Int, value: Boolean) {
+    @PostMapping("toggle")
+    fun putSensorData(body: Reader) {
+
+        val location = body.readText()
+
+        val sensor = sensordata.find { it.location == location } ?: return
+
+        sensor.dataHistory.add(SensorData(false, LocalDateTime.now()))
 
     }
 

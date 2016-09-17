@@ -30,4 +30,14 @@ function refr() {
     xhr.send();
 }
 
-setTimeout(refr, 5000);
+var toUpdate = document.getElementsByTagName("online-update");
+if (toUpdate.length > 0)
+    setTimeout(refr, 5000);
+
+
+function toggle(sensor) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "/sensor/toggle", true);
+    xhr.send(sensor);
+
+}
