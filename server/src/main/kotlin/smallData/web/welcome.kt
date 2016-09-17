@@ -1,8 +1,6 @@
 package smallData.web
 
-import kotlinx.html.div
-import kotlinx.html.h2
-import kotlinx.html.header
+import kotlinx.html.*
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -28,26 +26,59 @@ class Welcome {
     @GetMapping("welcome")
     fun view(result: PrintWriter, apartment: Int?) {
 
-        result.materialPage("Apt. $apartment") {
+        val title = "Apt. $apartment"
 
-            div("mdl-layout mdl-layout--mdl-js-layout") {
-                header("mdl-layout__header mdl-layout--waterfall") {
+        result.materialPage(title) {
 
+            div("mdl-layout") {
+                classes += "mdl-js-layout"
+                classes += "mdl-layout--fixed-header"
+
+                header("mdl-layout__header  mdl-layout__header--waterfall") {
+
+                    // Top row, always visible
                     div("mdl-layout__header-row") {
-                        style = "height: 5 cm"
-                        +"text"
+                        span("mdl-layout-title") { +title }
+
+                        spacer()
+
+                        nav(classes = "mdl-navigation") {
+                            a(classes = "mdl-navigation__link", href = "#") { +"Link" }
+                        }
+                    }
+
+                    // Bottom row, not visible on scroll
+                    div("mdl-layout__header-row") {
+                        spacer()
+                        +"second row"
+                    }
+                }
+
+                flush()
+
+                div("mdl-layout__content") {
+
+                    div("page-content") {
+
+                        h2 { +"Details:" }
+
+                        ul {
+                            for (i in 0..50) {
+                                li { +"item $i" }
+                            }
+
+                        }
                     }
 
                 }
             }
-            flush()
-
-            h2{+"Details:"}
-
         }
 
 
     }
 
+    private fun DIV.spacer() {
+        div("mdl-layout-spacer")
+    }
 
 }
