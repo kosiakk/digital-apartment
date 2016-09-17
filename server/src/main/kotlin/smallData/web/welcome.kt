@@ -10,6 +10,7 @@ import smallData.view.mdl_color
 import smallData.view.mdl_icon
 import java.io.PrintWriter
 import java.util.*
+import javax.inject.Inject
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -25,6 +26,9 @@ class Welcome {
         response.sendRedirect("/welcome?apartment=1920")
     }
 
+
+    @Inject
+    lateinit var sensor: SensorManager
 
     @GetMapping("welcome")
     fun view(result: PrintWriter, apartment: Int?) {
@@ -91,23 +95,41 @@ class Welcome {
 
 
                         ul("mdl-list") {
-                            for (i in 0..20) {
+
+                            sensor.sensordata.forEach { sensor ->
+
+
                                 li("mdl-list__item  mdl-list__item--two-line") {
                                     span("mdl-list__item-primary-content") {
                                         span {
-                                            +"Window"
+                                            +sensor.location
                                         }
                                         span("mdl-list__item-sub-title") {
-                                            +"Bedroom"
+                                            +sensor.type.description
                                         }
                                     }
                                     span("mdl-list__item-secondary-content") {
 
-                                        statusIcon()
+                                        val onOff = sensor.dataHistory.last().value
+
+                                        val icon = if (onOff) {
+                                            sensor.type.stateOnIcon
+                                        } else {
+                                            sensor.type.stateOffIcon
+                                        }
+
+                                        statusIcon(icon, "green")
+                                        span("mdl-list__item-secondary-info") {
+
+                                            +"closed"
+
+                                        }
 
                                     }
                                 }
                             }
+
+
 
                         }
                     }
@@ -119,13 +141,12 @@ class Welcome {
 
     }
 
-    private fun SPAN.statusIcon() {
+    private fun SPAN.statusIcon(icon: String, color: String) {
         span("mdl-list__item-secondary-action") {
-            mdl_icon("lock") {
-                mdl_color("white", "green")
+            mdl_icon(icon) {
+                mdl_color("white", color)
             }
         }
-        span("mdl-list__item-secondary-info") { +"closed" }
     }
 
     private fun DIV.spacer() {
