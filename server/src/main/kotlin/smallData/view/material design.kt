@@ -24,17 +24,38 @@ fun FlowContent.linea_icon(icon: String, size: Int = 64, bodyContent: (IMG.() ->
     }
 }
 
-fun FlowContent.mdl_icon(icon: String, text: String? = null, bodyContent: (I.() -> Unit)? = null) {
-    i("material-icons") {
-        if (bodyContent != null) {
-            bodyContent()
+fun Tag.mdl_icon(icon: String, text: String? = null, bodyContent: (I.() -> Unit)? = null) {
+    if (this is FlowContent) {
+
+        i("material-icons") {
+            if (bodyContent != null) {
+                bodyContent()
+            }
+
+            +icon
+        }
+        if (text != null) {
+            span(classes = "visuallyhidden") {
+                +text
+            }
         }
 
-        +icon
-    }
-    if (text != null) {
-        span(classes = "visuallyhidden") {
-            +text
+    } else if (this is PhrasingContent) {
+
+        // UGLY CODE DUPLICATE
+        // Bad, bad koltinx.html
+
+        i("material-icons") {
+            if (bodyContent != null) {
+                bodyContent()
+            }
+
+            +icon
+        }
+        if (text != null) {
+            span(classes = "visuallyhidden") {
+                +text
+            }
         }
     }
 }

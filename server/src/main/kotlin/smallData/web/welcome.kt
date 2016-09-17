@@ -102,12 +102,9 @@ class Welcome {
                                         }
                                     }
                                     span("mdl-list__item-secondary-content") {
-                                        span("mdl-list__item-secondary-info") { +"closed" }
-                                        span("mdl-list__item-secondary-action") {
-                                            mdl_icon("lock"){
-                                                mdl_color("white", "green")
-                                            }
-                                        }
+
+                                        statusIcon()
+
                                     }
                                 }
                             }
@@ -120,6 +117,15 @@ class Welcome {
         }
 
 
+    }
+
+    private fun SPAN.statusIcon() {
+        span("mdl-list__item-secondary-action") {
+            mdl_icon("lock") {
+                mdl_color("white", "green")
+            }
+        }
+        span("mdl-list__item-secondary-info") { +"closed" }
     }
 
     private fun DIV.spacer() {
