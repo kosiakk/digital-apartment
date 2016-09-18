@@ -69,11 +69,11 @@ class Welcome {
 
                         spacer()
 
-                       /* mdl_icon("check circle") {
-                            classes += "md-90"
-                        }
+                        /* mdl_icon("check circle") {
+                             classes += "md-90"
+                         }
 
-                        +"all is OK"*/
+                         +"all is OK"*/
                     }
                 }
                 div("mdl-layout__drawer") {
@@ -87,26 +87,26 @@ class Welcome {
 
                 div("mdl-layout__content") {
 
-                    div("page-content") {
+                    div("page-content  mdl-grid") {
+
+                        div("mdl-cell mdl-cell--3-col mdl-cell--12-col-phone mdl-cell--4-col-tablet") {
+                            ul("mdl-list  online-update") {
+
+                                sensor.sensordata.forEach { sensor ->
 
 
-                        ul("mdl-list  online-update") {
-
-                            sensor.sensordata.forEach { sensor ->
-
-
-                                li("mdl-list__item  mdl-list__item--two-line") {
-                                    span("mdl-list__item-primary-content") {
-                                        span {
-                                            +sensor.location
+                                    li("mdl-list__item  mdl-list__item--two-line") {
+                                        span("mdl-list__item-primary-content") {
+                                            span {
+                                                +sensor.location
+                                            }
+                                            span("mdl-list__item-sub-title") {
+                                                +sensor.type.description
+                                            }
                                         }
-                                        span("mdl-list__item-sub-title") {
-                                            +sensor.type.description
-                                        }
-                                    }
-                                    span("mdl-list__item-secondary-content") {
+                                        span("mdl-list__item-secondary-content") {
 
-                                        sensorIcon(sensor)
+                                            sensorIcon(sensor)
 
 /*
 
@@ -115,10 +115,10 @@ class Welcome {
                                         }
 */
 
+                                        }
                                     }
                                 }
                             }
-
 
                         }
                     }
