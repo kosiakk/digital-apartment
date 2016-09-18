@@ -93,7 +93,7 @@ open class SensorManager {
                 warningLevel = WaringLevel.RED
 
                 if (warningLevel != initialWarningLevel && warningsEnabled) {
-                    CallHelper.callPhoneAlarm("Hi Mrs Theresa you left the ${window.location} open")
+                    CallHelper.callPhoneAlarm("Hi Theresa you left the ${window.location} open")
                 }
             }
         }
